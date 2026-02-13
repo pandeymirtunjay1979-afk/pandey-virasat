@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>पांडे परिवार डिजिटल विरासत</title>
+    <style>
+        :root {
+            --gold: #c5a059; /* थोड़ा गहरा, एंटीक सोना */
+            --ink: #3e2723; /* पुरानी स्याही का रंग (गहरा भूरा) */
+            --paper: #f0e6d2; /* पुराने कागज का रंग */
+            --overlay-bg: #1a0f0a; /* ओपनिंग स्क्रीन का गहरा रंग */
+        }
+        body {
+            /* उपनिषद के पन्ने जैसा बैकग्राउंड टेक्सचर */
+            background-color: var(--paper);
+            background-image: linear-gradient(to right, rgba(0,0,0,0.05), rgba(0,0,0,0) 10%, rgba(0,0,0,0) 90%, rgba(0,0,0,0.05)), url('https://www.transparenttextures.com/patterns/aged-paper.png');
+            color: var(--ink);
+            font-family: 'Georgia', 'Times New Roman', serif; /* क्लासिक सेरिफ़ फ़ॉन्ट */
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* --- 1. भव्य स्वागत द्वार (Opening Screen) --- */
+        #welcome-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--overlay-bg);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: opacity 1.5s ease;
+            color: var(--gold);
+        }
+        .enter-btn {
+            background: var(--gold);
+            color: var(--ink);
+            border: 2px solid #fff;
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 30px var(--gold);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+        /* --- 2. मुख्य वेबसाइट फ्रेम (प्राचीन पांडुलिपि जैसा) --- */
+        .royal-frame {
+            border: 15px solid transparent;
+            /* बॉर्डर को पुराने फ्रेम जैसा बनाना */
+            border-image: url('https://i.imgur.com/s9O07Zq.png') 30 round; 
+            max-width: 900px;
+            margin: 20px auto;
+            /* फ्रेम के अंदर का बैकग्राउंड हल्का पारदर्शी कागज जैसा */
+            background: rgba(240, 230, 210, 0.7);
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(62, 39, 35, 0.5);
+            border-radius: 5px;
+            display: none; /* शुरू में छिपा रहेगा */
+        }
+
+        /* --- हेडर --- */
+        header { text-align: center; border-bottom: 2px solid var(--gold); padding-bottom: 20px; margin-bottom: 30px; }
+        h1 { color: var(--gold); font-size: 2.5rem; margin: 0; text-transform: uppercase; letter-spacing: 2px; text-shadow: 1px 1px 3px rgba(0,0,0,0.3); }
+        .tagline { font-style: italic; color: var(--ink); font-size: 1rem; margin-top: 5px; font-weight: bold; }
+
+        /* --- वंशावली (Tree Structure) --- */
+        .roots-box {
+            border: 3px double var(--gold);
+            background: rgba(197, 160, 89, 0.15);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: inset 0 0 20px rgba(197, 160, 89, 0.2);
+        }
+        .root-names { font-size: 1.6rem; font-weight: bold; color: var(--gold); text-shadow: 1px 1px 1px rgba(0,0,0,0.2); }
+        
+        .branch {
+            border-left: 4px solid var(--gold);
+            margin-left: 20px;
+            padding-left: 25px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        /* शाखाओं के निशान को थोड़ा एंटीक बनाना */
+        .branch::before { content: "📜"; font-size: 1.2rem; position: absolute; left: -14px; top: 0; }
+        .branch-head { font-size: 1.4rem; color: var(--gold); font-weight: bold; margin-bottom: 12px; display: block; text-shadow: 0 0 1px rgba(0,0,0,0.1); }
+        
+        .generation-list { list-style: none; padding: 0; margin: 0; }
+        .generation-list li { margin-bottom: 10px; font-size: 1.2rem; position: relative; padding-left: 20px; color: var(--ink); font-weight: 500; }
+        .generation-list li::before { content: "✒️"; font-size: 0.9rem; position: absolute; left: -5px; top: 2px; opacity: 0.7; }
+        .future { font-size: 0.9rem; color: #6d4c41; font-style: italic; }
+
+        /* --- गाँव का कोना --- */
+        .village-section {
+            border: 2px solid var(--gold);
+            padding: 20px;
+            margin-top: 40px;
+            background: rgba(197, 160, 89, 0.1);
+            border-radius: 8px;
+        }
+        .map-container { width: 100%; height: 250px; background: #eaddca; margin-top: 10px; border: 2px solid var(--gold); border-radius: 5px; }
+
+        /* --- इवेंट्स और तिजोरी --- */
+        .section-title { color: var(--gold); border-bottom: 2px dashed var(--gold); margin-top: 40px; padding-bottom: 8px; font-size: 1.4rem; font-weight: bold; }
+        .event-slider { display: flex; overflow-x: auto; gap: 15px; padding: 15px 0; }
+        /* इवेंट कार्ड को पुराने टिकट जैसा बनाना */
+        .event-card { min-width: 130px; background: var(--paper); padding: 15px; text-align: center; border: 2px solid var(--gold); border-radius: 5px; font-size: 1rem; font-weight: bold; box-shadow: 3px 3px 10px rgba(0,0,0,0.1); }
+
+        .vault-box { margin-top: 30px; text-align: center; padding: 20px; background: rgba(0,0,0,0.05); border-radius: 10px; }
+        input { padding: 12px; width: 70%; background: var(--paper); border: 2px solid var(--gold); color: var(--ink); border-radius: 5px; font-size: 1rem; font-family: serif; }
+        .vault-btn { padding: 12px 25px; background: var(--gold); color: var(--ink); border: 2px solid #3e2723; cursor: pointer; font-weight: bold; margin-top: 15px; border-radius: 5px; font-size: 1.1rem; transition: 0.3s; }
+        .vault-btn:hover { background: var(--ink); color: var(--gold); }
+
+        /* --- पुष्प वर्षा एनिमेशन (फूलों का रंग थीम के अनुसार) --- */
+        .flower { position: fixed; top: -10px; z-index: 100; pointer-events: none; animation: fall linear forwards; opacity: 0.8; }
+        @keyframes fall { to { transform: translateY(100vh) rotate(360deg); } }
+        footer { text-align: center; margin-top: 50px; font-size: 0.9rem; color: var(--ink); opacity: 0.7; }
+    </style>
+</head>
+<body>
+
+    <audio id="shankh">
+        <source src="https://assets.mixkit.co/active_storage/sfx/1559/1559-preview.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="welcome-screen">
+        <h1 style="margin-bottom: 20px; font-size: 3rem;">पांडे परिवार की डिजिटल विरासत</h1>
+        <p style="color: var(--gold); margin-bottom: 40px; font-size: 1.2rem;">कृपया पवित्र मन से प्रवेश करें</p>
+        <button class="enter-btn" onclick="startJourney()">🔔 पवित्र प्रवेश</button>
+    </div>
+
+    <div class="royal-frame" id="main-site">
+        <header>
+            <h1>📖 पांडे वंशावली 📖</h1>
+            <div class="tagline">"जड़ें परंपरा की, शाखाएं भविष्य की"</div>
+        </header>
+
+        <div class="roots-box">
+            <div class="root-names">🚩 स्व. भगवान पांडे ❤️ स्व. धनपातु देवी</div>
+            <div style="font-size: 1rem; margin-top: 8px; font-weight: bold;">(कुल के आधार स्तंभ)</div>
+        </div>
+
+        <div class="branch">
+            <span class="branch-head">I. श्री अनिरुद्ध पांडे</span>
+            <ul class="generation-list">
+                <li>मृत्युंजय पांडे <span class="future">(...अगली पीढ़ी)</span></li>
+                <li>नित्यानंद पांडे <span class="future">(...अगली पीढ़ी)</span></li>
+                <li>अविनाश पांडे <span class="future">(...अगली पीढ़ी)</span></li>
+            </ul>
+        </div>
+
+        <div class="branch">
+            <span class="branch-head">II. श्री राम इकबाल पांडे</span>
+            <ul class="generation-list">
+                <li>दलजीत पांडे <span class="future">(...अगली पीढ़ी)</span></li>
+            </ul>
+        </div>
+
+        <div class="branch">
+            <span class="branch-head">III. श्री हरेंद्र पांडे</span>
+            <ul class="generation-list">
+                <li>धीरज पांडे <span class="future">(...अगली पीढ़ी)</span></li>
+                <li>दीपक पांडे <span class="future">(...अगली पीढ़ी)</span></li>
+                <li>खुशबू <span class="future">(...अगली पीढ़ी)</span></li>
+            </ul>
+        </div>
+
+        <div class="village-section">
+            <h3 style="color: var(--gold); margin-top: 0; text-align: center; font-weight: bold;">🌾 गाँव का कोना</h3>
+            <p style="text-align: center; margin: 5px; font-style: italic;">"हमारी मिट्टी, हमारी पहचान"</p>
+            <div class="map-container">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d115132.86107238202!2d85.073002!3d25.594095!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ed5842f038b463%3A0xa63a2323a637d404!2sPatna%2C%20Bihar!5e0!3m2!1sen!2sin!4v1700000000000" 
+                    width="100%" height="100%" style="border:0; opacity: 0.8;" allowfullscreen="" loading="lazy">
+                </iframe>
+            </div>
+        </div>
+
+        <div class="section-title">📅 पारिवारिक कार्यक्रम</div>
+        <div class="event-slider">
+            <div class="event-card">🙏 कुल पूजा</div>
+            <div class="event-card">💍 विवाह उत्सव</div>
+            <div class="event-card">🪔 दीपावली</div>
+            <div class="event-card">🎂 जन्मदिन</div>
+        </div>
+
+        <div class="vault-box">
+            <div class="section-title" style="border:none; margin-top:0;">🔒 सुरक्षित दस्तावेज़</div>
+            <p style="font-size: 0.9rem;">(लैंड रेवेन्यू फाइलों के लिए)</p>
+            <input type="password" id="pass" placeholder="गुप्त पासवर्ड दर्ज करें...">
+            <br>
+            <button class="vault-btn" onclick="openVault()">तिजोरी खोलें 📜</button>
+        </div>
+
+        <footer>
+            © 2026 पांडे परिवार डिजिटल विरासत | एक अटूट परंपरा
+        </footer>
+    </div>
+
+    <script>
+        function startJourney() {
+            // 1. शंखनाद/ध्वनि बजाएं
+            var audio = document.getElementById("shankh");
+            audio.play().catch(error => console.log("Audio play failed: " + error));
+
+            // 2. स्वागत स्क्रीन हटाएं
+            var screen = document.getElementById("welcome-screen");
+            screen.style.opacity = "0";
+            
+            setTimeout(function() {
+                screen.style.display = "none";
+                // 3. मुख्य साइट दिखाएं
+                document.getElementById("main-site").style.display = "block";
+                
+                // 4. फूलों की वर्षा शुरू करें
+                setInterval(createFlower, 400);
+            }, 1000);
+        }
+
+        function createFlower() {
+            const flower = document.createElement('div');
+            // फूलों के प्रकार और रंग थीम के अनुसार
+            const types = ['🌸', '🌹', '✨', '🏵️', '🍁']; 
+            flower.classList.add('flower');
+            flower.innerText = types[Math.floor(Math.random() * types.length)];
+            
+            flower.style.left = Math.random() * 100 + 'vw';
+            flower.style.animationDuration = Math.random() * 4 + 3 + 's'; // थोड़े धीमे गिरेंगे
+            flower.style.fontSize = Math.random() * 15 + 10 + 'px';
+            // फूलों को थोड़ा पारदर्शी और पुराना लुक दें
+            flower.style.filter = "sepia(50%)";
+            
+            document.body.appendChild(flower);
+            
+            setTimeout(() => {
+                flower.remove();
+            }, 7000);
+        }
+
+        function openVault() {
+            var password = document.getElementById("pass").value;
+            if(password === "Pande@2026") {
+                alert("अनुमति स्वीकृत। प्राचीन तिजोरी खुल रही है...");
+                window.location.href = "https://drive.google.com"; 
+            } else {
+                alert("गलत पासवर्ड! कृपया पुनः प्रयास करें।");
+            }
+        }
+    </script>
+
+</body>
+</html>
